@@ -9,7 +9,12 @@ from abc import ABCMeta, abstractmethod
 
 import joblib
 import numpy as np
-from pkg_resources import resource_filename
+
+try:
+    from importlib.resources import files
+except ImportError:
+    # Fallback for Python < 3.9
+    from importlib_resources import files
 
 
 class RunupModel(metaclass=ABCMeta):
@@ -615,15 +620,14 @@ class Beuzen2019(RunupModel):
         Returns:
             The 2% exceedence runup level from a pre-trained Gaussian process model
         """
-        model_path = resource_filename(
-            "py_wave_runup", "datasets/beuzen18/gp_runup_model.joblib"
-        )
+        # Get the path to the model file using importlib.resources
+        model_file = files("py_wave_runup").joinpath("datasets/beuzen18/gp_runup_model.joblib")
 
         # Ignore the warning when unpickling GaussianProcessRegressor from version
         # 0.22.1.
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            with open(model_path, "rb") as f:
+            with model_file.open("rb") as f:
                 model = joblib.load(f)
 
         result = np.squeeze(

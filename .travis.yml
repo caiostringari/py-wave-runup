@@ -3,9 +3,8 @@
 language: python
 dist: "xenial"
 python:
-  - 3.9
-  - 3.8
-  - 3.7
+  - 3.12
+  - 3.13
 
 cache:
   pip: true
@@ -22,7 +21,7 @@ stages:
 before_install:
   - pip install --upgrade pip
 install:
-  - pip install poetry
+  - pip install uv
   - pip install tox-travis
 script:
   - tox
@@ -30,17 +29,17 @@ script:
 jobs:
   include:
     - stage: lint
-      python: 3.7
+      python: 3.13
       install:
         - pip install pre-commit
         - pre-commit install-hooks
       script:
         - pre-commit run --all-files
     - stage: docs
-      python: 3.9
+      python: 3.13
       install:
-        - pip install poetry
-        - poetry install -v
+        - pip install uv
+        - uv sync --dev
       script:
         - echo $PWD
         - sphinx-build -nWT -b dummy ./docs ./docs/_build
@@ -51,12 +50,10 @@ jobs:
         # User and password environment variables are set as hidden variables through
         # the web interface in the project settings.
         - pip install --upgrade pip
-        - pip install poetry
-        - poetry config http-basic.pypi $PYPI_USER $PYPI_PASS
-        - poetry build
+        - pip install build twine
       deploy:
         provider: script
-        script: poetry publish
+        script: python -m build && python -m twine upload dist/*
         skip_cleanup: true
         on:
           branch: master

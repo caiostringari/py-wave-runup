@@ -139,8 +139,8 @@ to create a Pull Request:
 1. Fork it (https://github.com/chrisleaman/py-wave-runup/fork)
 2. Create the development environment:
 
-    - For pip, run ``pip install --pre -r requirements.txt``
-    - For `poetry`_, run ``poetry install``
+    - For pip, run ``pip install -e .[dev]``
+    - For `uv`_, run ``uv sync --dev``
     - For `anaconda`_, run ``conda env create --name <env_name> -f environment.yml``
 
 3. Create your feature branch (``git checkout -b feature/fooBar``)
@@ -152,7 +152,7 @@ to create a Pull Request:
 9. Push to the branch (``git push origin feature/fooBar``)
 10. Create a new Pull Request
 
-.. _poetry: https://python-poetry.org/
+.. _uv: https://docs.astral.sh/uv/
 .. _anaconda: https://www.anaconda.com/distribution/#download-section
 
 
